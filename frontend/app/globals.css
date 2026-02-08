@@ -1,42 +1,53 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-merriweather);
+  --title-color: #111827; /* Gray-900 equivalent */
+  --card-bg: #ffffff;
+  --card-border: #f4f4f5; /* zinc-100 */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --title-color: #f9fafb; /* Gray-50 equivalent */
+    --card-bg: #18181b; /* zinc-900 */
+    --card-border: #27272a; /* zinc-800 */
   }
 }
 
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --title-color: #f9fafb;
+  --card-bg: #18181b;
+  --card-border: #27272a;
+}
+
+/* Base style reset for theme consistency */
+html, body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Force headings to respect theme variables */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--title-color) !important;
+}
+
+/* Animations */
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes floatingDust {
@@ -46,7 +57,7 @@
 }
 
 .animate-dust {
-  animation: floatingDust var(--duration, 10s) linear infinite;
+  animation: floatingDust var(--duration, 15s) linear infinite;
   animation-delay: var(--delay, 0s);
 }
 
@@ -70,14 +81,23 @@ body {
 
 @layer utilities {
   .bg-library {
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)), url('/images/library-bg.png');
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('/images/library-bg.png');
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
   }
   
   .dark .bg-library {
-    background-image: linear-gradient(to bottom, rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.75)), url('/images/library-bg.png');
+    background-image: linear-gradient(to bottom, rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.8)), url('/images/library-bg.png');
+  }
+
+  .dark-elevated {
+    @apply bg-zinc-900 border border-zinc-800 shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/5;
+  }
+
+  .heading-sharp {
+    @apply font-black tracking-tight drop-shadow-sm;
+    color: var(--title-color);
   }
 
   .bg-library-hero {
@@ -99,3 +119,26 @@ body {
      border-color: #d4af37;
   }
 }
+
+/* Scroll Reveal Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(5px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  pointer-events: auto;
+}
+
+/* Staggered delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }

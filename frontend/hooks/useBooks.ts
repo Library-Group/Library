@@ -131,8 +131,11 @@ export const useBookDetail = (bookId: string | undefined, userId: string | undef
 
     const checkFavorite = useCallback(async () => {
         if (!userId || !bookId) return;
+        const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`http://127.0.0.1:5000/api/users/${userId}`);
+            const res = await fetch(`http://127.0.0.1:5000/api/users/${userId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             const data = await res.json();
             if (data.favoriteBooks?.includes(bookId)) setIsFavorite(true);
         } catch (err) { console.error("Favorite check error:", err); }
@@ -148,8 +151,13 @@ export const useBookDetail = (bookId: string | undefined, userId: string | undef
             const url = isFavorite 
                 ? `http://127.0.0.1:5000/api/users/${userId}/favorites/${book.bookId}`
                 : `http://127.0.0.1:5000/api/users/${userId}/favorites`;
+            const token = localStorage.getItem('token');
             const res = await fetch(url, {
-                method, headers: { 'Content-Type': 'application/json' },
+                method, 
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: isFavorite ? null : JSON.stringify({ bookId: book.bookId })
             });
             if (res.ok) { setIsFavorite(!isFavorite); return { success: true }; }
@@ -160,9 +168,14 @@ export const useBookDetail = (bookId: string | undefined, userId: string | undef
 
     const confirmBorrow = async (fee = 15000) => {
         if (!book || !userId) return { success: false, message: "Dữ liệu không hợp lệ" };
+        const token = localStorage.getItem('token');
         try {
             const res = await fetch('http://127.0.0.1:5000/api/borrows', {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                method: 'POST', 
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ bookId: book.bookId, userId, fee })
             });
             const data = await res.json();
@@ -177,10 +190,14 @@ export const useBookDetail = (bookId: string | undefined, userId: string | undef
 
     const addComment = async (text: string, rating: number) => {
         if (!text.trim() || !userId) return;
+        const token = localStorage.getItem('token');
         try {
             const res = await fetch(`http://127.0.0.1:5000/api/books/${bookId}/comments`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ userId, text, rating })
             });
             if (res.ok) fetchComments();
@@ -279,7 +296,7 @@ export const useMyBooks = () => {
     const [myBooks, setMyBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(false);
 
-    // Sync with API for authenticated users, fallback to nothing (cleaner than LS conflict)
+    // Sync with API for authenticated users, fallback to nothing
     const loadBooks = useCallback(async () => {
         setLoading(true);
         const token = localStorage.getItem('token');
@@ -289,7 +306,9 @@ export const useMyBooks = () => {
             try {
                 const userId = JSON.parse(user).id;
                 // Fetch Favorites (My Books Shelf)
-                const favRes = await fetch(`http://127.0.0.1:5000/api/users/${userId}/favorites`);
+                const favRes = await fetch(`http://127.0.0.1:5000/api/users/${userId}/favorites`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
 
                 let books: Book[] = [];
                 
@@ -305,6 +324,15 @@ export const useMyBooks = () => {
         }
         setLoading(false);
     }, []);
+
+    useEffect(() => { 
+        // Silencing cascade warning by shifting to next tick if strictly necessary, 
+        // but often a simple ref guard is cleaner.
+        const timer = setTimeout(() => {
+            loadBooks();
+        }, 0);
+        return () => clearTimeout(timer);
+    }, [loadBooks]);
 
     const addBook = () => { loadBooks(); }; // Just trigger reload
     const removeBook = async (bookId: string) => {
@@ -326,16 +354,16 @@ export const useMyBooks = () => {
                 }
             );
 
-            // Update UI ngay, không cần gọi lại API
+            // Update UI immediately
             setMyBooks(prev => prev.filter(b => b._id !== bookId));
         } catch (err) {
             console.error("Failed to remove book", err);
         }
     };
 
-
     return { myBooks, loading, addBook, removeBook, refetch: loadBooks };
 };
+
 
 /**
  * Hook to manage news data fetching

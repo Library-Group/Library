@@ -108,7 +108,7 @@ export default function Reader() {
             </div>
 
             {/* Main Layout */}
-            <div className="max-w-[1440px] mx-auto flex gap-8 px-6 pt-24 pb-20">
+            <div className="max-w-[1440px] mx-auto flex gap-8 px-6 pt-44 pb-20">
                 {/* Left Sidebar - Table of Contents */}
                 <aside className="hidden lg:block w-72 sticky top-24 h-[calc(100vh-120px)] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700">
                     <div className="mb-6 px-4">
@@ -165,12 +165,7 @@ export default function Reader() {
                         )}
 
                         <div 
-                            style={{ 
-                                fontSize: `${fontSize}px`, 
-                                lineHeight: '2',
-                                fontFamily: 'var(--font-merriweather), serif'
-                            }}
-                            className="whitespace-pre-line text-left space-y-8 leading-relaxed selection:bg-indigo-500 selection:text-white"
+                            className={`whitespace-pre-line text-left space-y-8 selection:bg-indigo-500 selection:text-white [font-size:${fontSize}px] [line-height:2] [font-family:var(--font-merriweather),_serif]`}
                         >
                             {content.chapters[currentChapter].content}
                         </div>
@@ -222,7 +217,7 @@ export default function Reader() {
                                 </span>
                             </div>
                             <div className="overflow-hidden h-2 mb-4 text-xs flex rounded-full bg-indigo-200 dark:bg-indigo-900/20">
-                                <div style={{ width: `${((currentChapter + 1) / content.chapters.length) * 100}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500 transition-all duration-500"></div>
+                                <div className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500 transition-all duration-500 w-[${((currentChapter + 1) / content.chapters.length) * 100}%]`}></div>
                             </div>
                         </div>
                         <div className="space-y-4">

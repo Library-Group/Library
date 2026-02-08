@@ -3,6 +3,7 @@ import { Inter, Merriweather } from "next/font/google";
 import "./globals.css";
 
 import { AuthProvider } from "../context/AuthContext";
+import { ThemeProvider } from "../context/ThemeContext";
 import ClientLayout from "./ClientLayout";
 
 const inter = Inter({
@@ -27,15 +28,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${merriweather.variable} font-sans antialiased flex flex-col min-h-screen bg-zinc-50 dark:bg-zinc-900`}
+        className={`${inter.variable} ${merriweather.variable} font-sans antialiased flex flex-col min-h-screen bg-zinc-50 dark:bg-zinc-900 transition-colors duration-300`}
       >
-        <AuthProvider>
-          <ClientLayout>
-            {children}
-          </ClientLayout>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <ClientLayout>
+              {children}
+            </ClientLayout>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

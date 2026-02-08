@@ -16,7 +16,7 @@ export default function SearchPage() {
   const genres = ["Thơ", "Truyện", "Tiểu thuyết", "Kịch", "Tùy bút"];
 
   return (
-    <div className="min-h-screen bg-library pt-24 pb-12 px-4">
+    <div className="min-h-screen bg-library pt-44 pb-12 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -39,7 +39,7 @@ export default function SearchPage() {
                   value={genre} 
                   onChange={(e) => setGenre(e.target.value)}
                   title="Chọn thể loại"
-                  className="w-full px-3 py-2 text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-900 dark:text-white"
+                  className="w-full px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-[var(--background)] text-[var(--foreground)]"
                 >
                   <option value="">Tất cả</option>
                   {genres.map(g => (
@@ -55,7 +55,7 @@ export default function SearchPage() {
                   value={sortBy} 
                   onChange={(e) => setSortBy(e.target.value)}
                   title="Sắp xếp kết quả"
-                  className="w-full px-3 py-2 text-sm border border-zinc-200 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-zinc-900 dark:text-white"
+                  className="w-full px-3 py-2 text-sm border border-[var(--card-border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-[var(--background)] text-[var(--foreground)]"
                 >
                   <option value="title-asc">Tên A-Z</option>
                   <option value="title-desc">Tên Z-A</option>
@@ -88,7 +88,7 @@ export default function SearchPage() {
                   <Link 
                     key={book._id} 
                     href={`/books/${book.bookId}`}
-                    className="flex gap-4 p-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-700 hover:shadow-lg hover:border-indigo-200 transition-all group"
+                    className="flex gap-4 p-4 bg-[var(--card-bg)] rounded-2xl shadow-sm border border-[var(--card-border)] hover:shadow-lg hover:border-indigo-200 transition-all group"
                   >
                     <div className="w-24 h-32 relative flex-shrink-0 rounded-xl overflow-hidden bg-zinc-100">
                       {book.imageUrl ? (

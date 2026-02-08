@@ -27,7 +27,7 @@ exports.getDashboardStats = async (req, res) => {
     const activeBorrows = await Borrow.countDocuments({ status: 'borrowing' });
     const overdueBorrows = await Borrow.countDocuments({ status: 'overdue' });
     const returnedBorrows = await Borrow.countDocuments({ status: 'returned' });
-    
+
     const borrowingBooks = await Borrow.aggregate([
       { $match: { status: 'borrowing' } },
       { $group: { _id: "$bookId", title: { $first: "$bookTitle" }, count: { $sum: 1 } } },
@@ -36,7 +36,7 @@ exports.getDashboardStats = async (req, res) => {
     ]).then(results => results.map(item => ({
       bookId: item._id,
       title: item.title,
-      saveCount: item.count 
+      saveCount: item.count
     })));
 
     const overdueRecords = await Borrow.find({ status: 'overdue' })

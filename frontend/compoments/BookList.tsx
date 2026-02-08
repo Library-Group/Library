@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useBooks, useFilteredBooks } from "../hooks/useBooks";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,6 +16,21 @@ export default function BookList() {
     filteredBooks, currentBooks,
     totalPages, handlePageChange, resetFilters
   } = useFilteredBooks(books, 6);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("reveal-visible");
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const elements = document.querySelectorAll(".reveal");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [currentBooks, loading]);
 
   if (loading) {
     return (
@@ -52,10 +68,10 @@ export default function BookList() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Sidebar: Filters and Search */}
-        <aside className="lg:col-span-3 space-y-8">
-          <div className="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-zinc-100 dark:border-zinc-800 shadow-xl space-y-8 sticky top-24">
+        <aside className="lg:col-span-3 space-y-8 reveal">
+          <div className="bg-[var(--card-bg)] p-8 rounded-[2rem] border border-[var(--card-border)] shadow-xl space-y-8 sticky top-24">
             <div>
-              <h3 className="text-xs font-semibold text-zinc-500 mb-4 px-1">Tìm kiếm nội dung</h3>
+              <h3 className="text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-4 px-1 uppercase tracking-wider">Tìm kiếm nội dung</h3>
               <div className="relative">
                 <input 
                   type="text" 
@@ -65,7 +81,7 @@ export default function BookList() {
                     setSearchTerm(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="w-full pl-10 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-sm text-zinc-700 dark:text-zinc-200"
+                  className="w-full pl-10 pr-4 py-3 bg-[var(--background)] border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-sm text-[var(--foreground)]"
                 />
                 <svg className="w-5 h-5 absolute left-3 top-3 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -75,7 +91,7 @@ export default function BookList() {
 
             <div className="space-y-6">
               <div>
-                <h3 className="text-xs font-semibold text-zinc-500 mb-3 px-1">Chọn thể loại</h3>
+                <h3 className="text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-3 px-1 uppercase tracking-wider">Chọn thể loại</h3>
                 <select 
                   value={selectedGenre}
                   onChange={(e) => {
@@ -83,14 +99,14 @@ export default function BookList() {
                     setCurrentPage(1);
                   }}
                   title="Chọn thể loại"
-                  className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-sm text-zinc-600 dark:text-zinc-400"
+                  className="w-full px-4 py-3 bg-[var(--background)] border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-sm text-[var(--foreground)]"
                 >
                   {genres.map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
               </div>
 
               <div>
-                <h3 className="text-xs font-semibold text-zinc-500 mb-3 px-1">Thời kỳ văn học</h3>
+                <h3 className="text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-3 px-1 uppercase tracking-wider">Thời kỳ văn học</h3>
                 <select 
                   value={selectedPeriod}
                   onChange={(e) => {
@@ -98,7 +114,7 @@ export default function BookList() {
                     setCurrentPage(1);
                   }}
                   title="Chọn thời kỳ"
-                  className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-sm text-zinc-600 dark:text-zinc-400"
+                  className="w-full px-4 py-3 bg-[var(--background)] border border-[var(--card-border)] rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-sm text-[var(--foreground)]"
                 >
                   {periods.map(p => <option key={p || 'Unknown'} value={p}>{p}</option>)}
                 </select>
@@ -140,7 +156,7 @@ export default function BookList() {
                   <Link
                     key={book._id}
                     href={`/books/${book.bookId}`}
-                    className="group relative bg-white dark:bg-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-zinc-100 dark:border-zinc-800 flex flex-col"
+                  className="group relative bg-[var(--card-bg)] rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-[var(--card-border)] flex flex-col"
                   >
                     <div className="h-56 w-full relative overflow-hidden bg-zinc-50 dark:bg-zinc-900">
                        {book.imageUrl ? (
@@ -171,14 +187,14 @@ export default function BookList() {
                     <div className="p-6 flex-grow flex flex-col">
                       <div className="text-[10px] text-indigo-500 font-medium mb-2">{book.genre}</div>
                       
-                      <h2 className="text-lg font-bold mb-4 text-zinc-800 dark:text-zinc-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-snug min-h-[3rem]">
+                      <h2 className="text-lg font-bold mb-4 text-[var(--title-color)] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-snug min-h-[3rem] font-black tracking-tight drop-shadow-sm">
                         {book.title}
                       </h2>
       
                       <div className="mt-auto pt-4 border-t border-zinc-50 dark:border-zinc-800 flex items-center justify-between">
                         <div className="flex flex-col">
-                            <span className="text-[10px] text-zinc-400 mb-0.5">Tác giả</span>
-                            <span className="font-medium text-zinc-700 dark:text-zinc-300 text-xs truncate max-w-[140px]">{book.author?.name || 'Vô danh'}</span>
+                            <span className="text-[10px] text-zinc-400 dark:text-zinc-500 mb-0.5 uppercase tracking-tighter font-bold">Tác giả</span>
+                            <span className="font-medium text-zinc-700 dark:text-zinc-300 text-xs truncate max-w-[140px] uppercase">{book.author?.name || 'Vô danh'}</span>
                         </div>
                         <div 
                           className="h-9 w-9 rounded-lg bg-zinc-50 dark:bg-zinc-900 text-zinc-400 group-hover:text-indigo-600 group-hover:bg-indigo-50 transition-all flex items-center justify-center border border-zinc-100 dark:border-zinc-800"

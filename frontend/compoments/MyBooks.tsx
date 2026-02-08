@@ -8,7 +8,7 @@ export default function MyBooks() {
   const { myBooks, loading, removeBook } = useMyBooks();
 
   return (
-    <div className="max-w-7xl mx-auto py-20 px-6 animate-fadeIn">
+    <div className="max-w-7xl mx-auto pt-44 pb-20 px-6 animate-fadeIn bg-library min-h-screen">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-zinc-100 dark:border-zinc-800 pb-10">
         <div className="space-y-4">
           <h1 className="text-5xl font-black text-zinc-900 dark:text-white tracking-tight italic">
@@ -76,13 +76,13 @@ export default function MyBooks() {
 
               <div className="mt-8 px-2 space-y-3 pt-6 border-t border-zinc-50 dark:border-zinc-800">
                 <Link 
-                  href={`/books/${book._id}`} 
+                  href={`/books/${book.bookId}`} 
                   className="w-full py-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-xl font-bold text-xs uppercase tracking-widest text-center block hover:bg-indigo-600 dark:hover:bg-indigo-50 hover:text-white dark:hover:text-indigo-600 transition-all shadow-lg shadow-zinc-100 dark:shadow-none"
                 >
                   Tiếp tục đọc
                 </Link>
                 <Link 
-                  href={`/books/${book._id}`} 
+                  href={`/books/${book.bookId}`} 
                   className="w-full py-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 rounded-xl font-bold text-[10px] uppercase tracking-widest text-center block hover:border-zinc-400 transition-all"
                 >
                   Chi tiết tác phẩm

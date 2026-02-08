@@ -12,6 +12,8 @@ import SystemAdmin from '@/page/SystemAdmin';
 import BookDetail from '@/compoments/BookDetail';
 import MyBooks from '@/compoments/MyBooks';
 import Reader from '@/page/Reader';
+import News from '@/page/News';
+import About from '@/page/About';
 
 export default function CatchAllPage({ params }: { params: Promise<{ slug?: string[] }> }) {
   const resolvedParams = use(params);
@@ -66,6 +68,8 @@ export default function CatchAllPage({ params }: { params: Promise<{ slug?: stri
   if (slug[0] === 'books' && slug[1] && slug[2] === 'read') return <Reader />;
   if (slug[0] === 'books' && slug[1]) return <BookDetail />;
   if (slug[0] === 'my-books') return <MyBooks />;
+  if (slug[0] === 'news') return <News />;
+  if (slug[0] === 'about') return <About />;
 
   // 404 Fallback
   return (
